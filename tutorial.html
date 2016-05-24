@@ -1,0 +1,84 @@
+<div id="modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h3 class="lead">Transcription of the Qasr Ibrim excavation cards</h3>
+            </div>
+
+            <div id="0" class="modal-body" style="display:none">
+                <p>
+                    This project is an application for the crowd-sourcing of data from archival cards that
+                    have been generated from excavations at Qasr Ibrim in the 1980s. This is a test to see how
+                    well suited these cards are to transcription.
+                </p>
+            </div>
+
+            <div id="1" class="modal-body" style="display:none">
+
+                <p>
+                    Therefore there are a variety of fields that could be completed:
+                </p>
+
+                <ol>
+                    <li>Date of discovery(YY-MM-DD generally)</li>
+                    <li>Unit</li>
+                    <li>Level number</li>
+                    <li>Object type</li>
+                    <li>Registration number</li>
+                    <li>Excavation number</li>
+                    <li>Date of level</li>
+                    <li>Date of object</li>
+                    <li>Photo numbers</li>
+                    <li>Object size</li>
+                    <li>Materials</li>
+                    <li>Description</li>
+                </ol>
+            </div>
+
+            <div id="2" class="modal-body" style="display:none">
+                <p>
+                    Finally, you may have comments on the index card, if you do, please fill in the final box and then
+                    submit your contribution. Thank you for taking part.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <a id="prevBtn" href="#" onclick="showStep('prev')" class="btn btn-default">Previous</a>
+                <a id="nextBtn" href="#" onclick="showStep('next')" class="btn btn-success">Next</a>
+                <a id="startContrib" data-dismiss="modal" class="btn btn-primary" style="display:none"><i
+                        class="glyphicon glyphicon-thumbs-up"></i> Let's start!</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var step = -1;
+    function showStep(action) {
+        $("#" + step).hide();
+        if (action == 'next') {
+            step = step + 1;
+        }
+        if (action == 'prev') {
+            step = step - 1;
+        }
+        if (step == 0) {
+            $("#prevBtn").hide();
+        }
+        else {
+            $("#prevBtn").show();
+        }
+
+        if (step == 2 ) {
+            $("#nextBtn").hide();
+            $("#startContrib").show();
+        }
+        $("#" + step).show();
+    }
+
+    showStep('next');
+    $("#modal").modal('show');
+
+</script>

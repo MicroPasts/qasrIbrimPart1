@@ -1,0 +1,521 @@
+<link rel="stylesheet" href="/static/vendor/fancybox/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+
+<!-- Fancy box script -->
+<script src="/static/vendor/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+<!-- jQuery cookie -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.0/jquery.cookie.min.js" type="text/javascript"></script>
+
+<!-- jquery ui -->
+<script src="https://code.jquery.com/ui/1.8.1/jquery-ui.min.js" type="text/javascript"></script>
+
+<!-- jquery form serializer -->
+<script src="/static/js/vendor/jquery.serializeJSON.min.js" type="text/javascript"></script>
+
+<!-- Old browser alerts -->
+<div style="display:none;margin-top:15px; height:500px;" id="oldbrowser" class="row">
+
+    <div class="col-md-8 col-md-offset-1 alert alert-info">
+        <h2>
+            Browser problem detected.
+        </h2>
+        <p>
+            Sorry, but your browser does not support the current application you ar trying to access.
+            If you want to contribute, please, upgrade to a modern web browser like the open source and free
+            alternatives
+            <a href="http://www.mozilla.org/en-US/firefox/new/">Firefox</a> or
+            <a href="https://www.google.com/intl/en/chrome/browser/">Chrome</a>.
+        </p>
+    </div>
+</div>
+<!-- End of Row -->
+
+<div>
+    <!-- empty div - why? -->
+</div>
+
+<!-- Success and Error Messages for the user -->
+<div style="margin-top:15px;">
+    <div id="success" class="alert alert-success" style="display:none;">
+        <strong>Well done!</strong> You have successfully submitted your transcription. Here is another to try if you
+        wish!
+    </div>
+    <div id="loading" class="alert alert-info" style="display:none;">
+        <img src="/static/img/loading.gif">Loading next task...
+    </div>
+    <div id="taskcompleted" class="alert alert-info" style="display:none;">
+        <strong>The task has been completed!</strong> Thanks a lot!
+    </div>
+    <div id="finish" class="alert alert-success" style="display:none;">
+        <h2>
+            Congratulations!
+        </h2>
+        <p>
+            You have participated in <strong>all</strong> available tasks! Thank you for your interest and help.
+        </p>
+        <br/>
+        <img src="http://crowdsourced.micropasts.org/static/img/MP_SQUARE_notype.png" width="200" height="200"/>
+        <div class="alert-actions">
+            <!-- Go back to project info page -->
+            <a class="btn-default btn" href="/project/abydosTombZ">Go back</a>
+            <!-- End of go back. -->
+            <a class="btn-default btn" href="/project">or, try another project</a>
+        </div>
+    </div>
+
+    <div id="error" class="alert alert-danger" style="display:none;">
+        <a class="close">X.</a>
+        <strong>Error!</strong> Something went wrong, please contact the site
+        administrators via the forum, Twitter, email or our Facebook page.
+    </div>
+</div>
+
+<!-- End Success and Error Messages for the user -->
+
+<!--
+    Task DOM for loading the Flickr Images
+    It uses the class="skeleton" to identify the elements that belong to the
+    task.
+-->
+
+<!-- Start Skeleton Row-->
+<div class="row skeleton">
+
+    <!-- Start of Question and Submission DIV -->
+
+    <!-- The button groups and toolbar above the image -->
+    <div class="btn-group pull-right">
+        <!-- Tutorial -->
+        <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal"><i
+                class="glyphicon glyphicon-eye-open"></i> Tutorial
+        </button>
+        <!-- Forum help -->
+        <a class="btn btn-info btn-sm" id="imgLink" target="_blank" data-toggle="tooltip" data-placement="top"
+           title="Opens in a new window" href="http://community.micropasts.org/category/crowd-sourcing-support"><i
+                class="glyphicon glyphicon-book"></i> Community Help</a>
+        <!-- Overlay image -->
+        <a id="raw" href="" class="btn btn-sm btn-info fancybox"><i class="glyphicon glyphicon-picture"></i> Overlay</a>
+        <!-- Link to flickr -->
+        <a id="flickr" rel="tooltip" target="_blank" data-toggle="tooltip" data-placement="top"
+           title="Opens in a new window" href="" class="btn btn-sm btn-info"><i class="icon icon-flickr"></i> View on
+            Flickr</a>
+        <!-- Download the image from flickr -->
+        <a id="down" rel="tooltip" data-toggle="tooltip" data-placement="top" title="Only works for compliant browsers"
+           download="" href="" class="btn btn-sm btn-info"><i class="glyphicon glyphicon-download"></i> Download</a>
+    </div>
+
+    <!-- A loading button to alert user if there is an image being parsed -->
+    <div class="btn-group">
+        <button id="status" type="button" class="btn btn-default btn-type disabled" name="loading" value="loading">
+            Loading photo
+        </button>
+    </div>
+    <!-- End of loading button -->
+
+    <div class="row">
+        <!-- Start of Photograph div (column) -->
+        <div class="col-md-6">
+            <div id="imgContainer">
+             <span id="photo-link">
+                <img id="photo" src="/static/img/loading.gif" class="loadingIcon">
+             </span>
+            </div>
+        </div>
+        <!-- End of Photograph div (column) -->
+
+        <!-- Start of form -->
+        <form id="excavationData" role="form">
+
+            <div class="col-md-6">
+
+                <div class="form-group">
+                    <label class="control-label" for="date">Date of discovery </label>
+                    <input type="text" name="date" id="date" class="form-control fields"
+                           placeholder="This is usually in form YY.MM.DD eg 85.12.20">
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="unit">Unit: </label>
+                    <input type="text" name="unit" id="unit" class="form-control fields"
+                           placeholder="This may not be present, but is at the top of the card and maybe like 939 Plaza">
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="level">Level: </label>
+                    <input type="text" name="level" id="level" class="form-control fields"
+                           placeholder="The level is usually below Unit and maybe numerical eg 4">
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="objectType">Object Type: </label>
+                    <input type="text" name="objectType" id="objectType" class="form-control fields"
+                           placeholder="The object type is un labelled on the form and may say something like stopper">
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="regNumber">Registration Number: </label>
+                    <input type="text" name="regNumber" id="regNumber" class="form-control fields"
+                           placeholder="This number is not always present">
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="excNumber">Excavation Number: </label>
+                    <input type="text" name="excNumber" id="excNumber" class="form-control fields"
+                           placeholder="This number is usually present and is numerical eg 198">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="dateOfLevel">Date of Level: </label>
+                    <input type="text" name="dateOfLevel" id="dateOfLevel" class="form-control fields"
+                           placeholder="This is usually blank">
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="dateOfObject">Date of Object: </label>
+                    <input type="text" name="dateOfObject" id="dateOfObject" class="form-control fields"
+                           placeholder="This is usually blank">
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="photoNumbers">Photo Numbers: </label>
+                    <input type="text" name="photoNumbers" id="photoNumbers" class="form-control fields"
+                           placeholder="This is usually a text string eg 84F 180/37">
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="size">Size: </label>
+                    <input type="text" name="size" id="size" class="form-control fields"
+                           placeholder="This is usually a text string">
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="materials">Materials: </label>
+                    <input type="text" name="materials" id="materials" class="form-control fields"
+                           placeholder="This is usually a text string">
+                </div>
+
+            </div>
+            <div class="col-md-6">
+
+
+                <div class="form-group">
+                    <label class="control-label" for="description">Description: </label>
+                    <textarea rows="5" name="description" id="description" class="form-control fields"
+                              placeholder="The description may contain drawings, just transcribe the text" rel="tooltip"
+                              data-toggle="tooltip"
+                              data-placement="bottom"
+                              title="The description may contain drawings, just transcribe the text."></textarea>
+                </div>
+
+
+                <hr/>
+
+                <div class="form-group">
+                    <label class="control-label" for="comments">Your Comments</label>
+                    <textarea class="form-control fields" rows="2" id="comments" name="comments"
+                              placeholder="Add any comments you may have about the photo or your experience with this task."></textarea>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-success btn-answer" value='Yes'><i class="icon icon-white icon-save"></i>
+                        Submit your answer
+                    </button>
+                </div>
+            </div>
+        </form>
+        <!-- End of form -->
+
+
+    </div>
+
+    <!-- Feedback items for the user -->
+    <p>You are working now on task: <span id="task-id" class="label label-warning">#</span></p>
+    <p>You have completed: <span id="done" class="label label-info"></span> tasks from
+        <!-- Progress bar for the user -->
+        <span id="total" class="label label-inverse"></span></p>
+    <div class="progress progress-striped">
+        <div id="progress" rel="tooltip" title="#" class="progress-bar" role="progressbar" style="width: 0%;"></div>
+    </div>
+    <!-- End of feedback row -->
+
+</div>
+
+<!-- The tutorial code -->
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h3 class="lead">Transcription of the Qasr Ibrim excavation cards</h3>
+            </div>
+
+            <div id="0" class="modal-body" style="display:none">
+                <p>
+                    This project is an application for the crowd-sourcing of data from archival cards that
+                    have been generated from excavations at Qasr Ibrim in the 1980s. This is a test to see how
+                    well suited these cards are to transcription.
+                </p>
+            </div>
+
+            <div id="1" class="modal-body" style="display:none">
+
+                <p>
+                    Therefore there are a variety of fields that could be completed:
+                </p>
+
+                <ol>
+                    <li>Date of discovery(YY-MM-DD generally)</li>
+                    <li>Unit</li>
+                    <li>Level number</li>
+                    <li>Object type</li>
+                    <li>Registration number</li>
+                    <li>Excavation number</li>
+                    <li>Date of level</li>
+                    <li>Date of object</li>
+                    <li>Photo numbers</li>
+                    <li>Object size</li>
+                    <li>Materials</li>
+                    <li>Description</li>
+                </ol>
+            </div>
+
+            <div id="2" class="modal-body" style="display:none">
+                <p>
+                    Finally, you may have comments on the index card, if you do, please fill in the final box and then
+                    submit your contribution. Thank you for taking part.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <a id="prevBtn" href="#" onclick="showStep('prev')" class="btn btn-default">Previous</a>
+                <a id="nextBtn" href="#" onclick="showStep('next')" class="btn btn-success">Next</a>
+                <a id="startContrib" data-dismiss="modal" class="btn btn-primary" style="display:none"><i
+                        class="glyphicon glyphicon-thumbs-up"></i> Let's start!</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- End of tutorial code -->
+
+<!-- End of skeleton -->
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("#acti").tooltip({
+                placement: $(this).data("placement") || 'top'
+            });
+        });
+
+
+
+
+
+
+</script>
+
+<script>
+    var step = -1;
+    function showStep(action) {
+        $("#" + step).hide();
+        if (action == 'next') {
+            step = step + 1;
+        }
+        if (action == 'prev') {
+            step = step - 1;
+        }
+        if (step == 0) {
+            $("#prevBtn").hide();
+        }
+        else {
+            $("#prevBtn").show();
+        }
+
+        if (step == 2 ) {
+            $("#nextBtn").hide();
+            $("#startContrib").show();
+        }
+        $("#" + step).show();
+    }
+
+    showStep('next');
+    $("#modal").modal('show');
+
+
+
+
+
+
+</script>
+
+<!-- Client side scripts -->
+<script type="text/javascript ">
+// Quick fix for IE8
+Modernizr.load({
+  test: window.JSON,
+  nope: '/static/js/vendor/json2.min.js'
+});
+
+
+
+
+
+
+
+
+</script>
+
+<script type="text/javascript">
+    $(window).resize(function(){
+        console.log('Window resized');
+    });
+
+
+
+
+
+
+</script>
+
+<!-- Load user progress -->
+<script type="text/javascript">
+    function loadUserProgress() {
+        pybossa.userProgress('qasrIbrim').done(function(data){
+            console.log("Total answers done for user: " + data.done);
+            var pct = Math.round((data.done*100)/data.total);
+            $("#progress").css("width", pct.toString() +"%");
+            $("#progress").attr("title", pct.toString() + "% completed!");
+            $("#progress").tooltip({'placement': 'left'});
+            $("#total").text(data.total);
+            $("#done").text(data.done);
+            $('a[rel]').tooltip({'placement': 'left'});
+        });
+    }
+
+
+
+
+
+
+
+
+</script>
+
+<script type="text/javascript">
+    pybossa.taskLoaded(function(task, deferred) {
+        if ( ! $.isEmptyObject(task) ) {
+          var img = $('<img width="100%" style="height:auto;" />');
+            img.load(function() {
+                deferred.resolve(task);
+                $("#status").text("Photo loaded!");
+            });
+            img.attr('src', task.info.url_b);
+            img.addClass('img-polaroid');
+            task.info.image = img;
+            console.log('Task ID: ' + task.id);
+        }
+        else {
+            deferred.resolve(task);
+        }
+    });
+
+
+
+
+
+
+</script>
+
+<script type="text/javascript">
+    pybossa.presentTask(function(task, deferred) {
+        if ( !$.isEmptyObject(task) ) {
+            loadUserProgress();
+            console.log(task);
+            $('#photo-link').html('').append(task.info.image);
+            $('#task-id').html(task.id);
+            $("a#raw").attr("href", task.info.url_b);
+            $("a#flickr").attr("href", task.info.link + '/sizes/k/');
+            $("a#down").attr("download", task.id);
+            $("a#down").attr("href", task.info.url_b );
+            $(".fancybox").fancybox();
+            $('#imgLink').tooltip();
+            $("[rel=tooltip]").tooltip();
+            $('.btn-answer').off('click').on('click', function(evt) {
+                evt.preventDefault();
+                var answer = $(evt.target).attr("value");
+                if (typeof answer != 'undefined') {
+                    task.answer = $("#excavationData").serializeJSON();
+                    console.log(task.answer);
+                    pybossa.saveTask(task.id, task.answer).done(function() {
+                        $("html, body").animate({ scrollTop: 0 }, "slow");
+                        $("#success").fadeIn(500).fadeOut(500);
+                        $("#loading").fadeIn(500).fadeOut(500);
+
+                        // The line below resets the form when next loading a task
+                        $('.fields').val('');
+                        $('input:checkbox').removeAttr('checked');
+                        deferred.resolve();
+                    });
+                } else {
+                    $("#error").show();
+                }
+            });
+            $("#loading").hide();
+        } else {
+            $(".skeleton").hide();
+            $("#loading").hide();
+            $("#finish").fadeIn(500);
+        }
+    });
+    pybossa.run('qasrIbrim');
+
+
+
+
+
+
+</script>
+
+<!-- Project specific styles -->
+<style>
+    .messageMargin {
+    margin-top: 15px;
+    }
+    .loadingIcon {
+    max-width:100%;
+    }
+    .none {
+    display:none;
+    }
+    .ui-autocomplete {
+    background-color: white;
+    width: 300px;
+    border: 1px solid #cfcfcf;
+    list-style-type: none;
+    padding: 10px;
+    }
+    .multiselect-container {
+    max-height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    }
+    #map {
+    height:400px;
+    width:100%;
+    margin-top: 15px;
+    }
+    #keywords .btn-group {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    }
+    .row {
+    margin-left: 0px;
+    margin-right: 0px;
+    }
+
+
+
+
+
+
+</style>
